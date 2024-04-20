@@ -1,0 +1,16 @@
+title: 'class2'
+save_path: './saved/EXP1/'
+xlim: [-1, 1]
+ylim: [-1, 1]
+start_point_pos: [0.8, 0.8]
+final_point_pos: [-0.8, -0.8]
+via_speed: [1.0, 1.0, 1.0, 1.0, 1.0]
+total_time_length: 1
+speed_accel_parameter: 0
+speed_decay_parameter: 1
+num_timesteps: 200
+num_delta_t: 200_000
+s: 0
+obstacles:
+  pos: [[0, 0]]
+  rad: [0.2]

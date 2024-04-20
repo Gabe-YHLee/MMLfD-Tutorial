@@ -1,0 +1,4 @@
+results/mmp.pkl
+results/nrmmp.pkl
+results/nrmmfp.pkl
+*.pyc

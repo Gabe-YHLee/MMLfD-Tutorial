@@ -1,0 +1,3 @@
+height:0.125
+inner_width:0.072 
+outer_width:0.09
