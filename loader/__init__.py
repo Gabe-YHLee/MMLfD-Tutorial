@@ -1,6 +1,6 @@
 from torch.utils import data
 from loader.Pouring_dataset import Pouring
-from loader.Toy_dataset import TwoDimToy
+from loader.Toy_dataset import Toy
 
 def get_dataloader(data_dict, **kwargs):
     dataset = get_dataset(data_dict)
@@ -16,5 +16,5 @@ def get_dataset(data_dict, **kwargs):
     if name == 'Pouring':
         dataset = Pouring(**data_dict)
     elif name == 'Toy':
-        dataset = TwoDimToy(**data_dict)
+        dataset = Toy(**data_dict)
     return dataset

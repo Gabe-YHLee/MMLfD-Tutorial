@@ -5,8 +5,6 @@ import torch.nn as nn
 from transformers import RobertaTokenizer, RobertaModel
 from vis_utils.plotly_SE3 import visualize_SE3
 
-from geometry import relaxed_distortion_measure
-
 from utils.utils import SE3smoothing
 from utils.LieGroup_torch import log_SO3
 
@@ -122,42 +120,6 @@ class MMP(nn.Module):
             recon.detach().cpu()[:, 0: -1: skip_size]
         )
         return {"SE3traj_data_and_recon#": fig}
- 
-class IMMP(MMP):
-    def __init__(self, encoder, decoder, iso_reg=1.0, smoothness_weight=10.0, metric='identity', so3_weight=1.0):
-        super(IMMP, self).__init__(encoder, decoder, smoothness_weight=smoothness_weight)
-        self.iso_reg = iso_reg
-        self.metric = metric
-        self.so3_weight = so3_weight
-        
-    def train_step(self, x, optimizer=None, **kwargs):
-        optimizer.zero_grad()
-        recon = self(x)
-        mse_r, mse_p = self.compute_mse(x, recon)
-        loss = 10*mse_r.mean() + mse_p.mean()
-        
-        z = self.encode(x)
-        def func(z):
-            return self.decode(z)
-        kwargs = {}
-        if self.metric == 'se3':
-            kwargs['so3_weight'] = self.so3_weight
-        iso_loss = relaxed_distortion_measure(func, z, metric=self.metric, **kwargs)
-        
-        loss += iso_loss * self.iso_reg
-        
-        energy = self.smoothness_loss(z)
-        loss = loss + self.smoothness_weight * energy.mean()
-        
-        loss.backward()
-        optimizer.step()
-        return {
-            "loss": loss.item(),
-            "mse_r_": mse_r.mean().item(), 
-            "mse_p_": mse_p.mean().item(),
-            "iso_loss_": iso_loss.item(), 
-            "energy_": energy.mean().item()}
- 
  
 class NRMMP(MMP):
     def __init__(self, encoder, decoder, approx_order=1, kernel=None):

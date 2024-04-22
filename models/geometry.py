@@ -7,6 +7,8 @@ def relaxed_distortion_measure(
     z, 
     eta=0.2, 
     metric='identity', 
+    H=None,
+    dim=None,
     *args, 
     **kwargs):
     
@@ -33,6 +35,25 @@ def relaxed_distortion_measure(
         TrG = torch.sum(weights.view(bs, -1)*Jv.view(bs, -1)**2, dim=1).mean()
         HJv = weights*Jv
         JTHJv = (torch.autograd.functional.vjp(func, z_augmented, v=HJv, create_graph=True)[1]).view(bs, -1)
+        TrG2 = torch.sum(JTHJv**2, dim=1).mean()
+        return TrG2/TrG**2
+    elif metric == 'curve':
+        assert H is not None
+        # H (1, -1, -1)
+        v = torch.randn(z.size()).to(z)
+        Jv = torch.autograd.functional.jvp(
+            func, z_augmented, v=v, create_graph=True)[1].reshape(
+                bs, -1, dim
+            )
+        TrG = torch.einsum(
+            'bni, bnm, bmi -> b', Jv, H.to(z).repeat(bs, 1, 1), Jv
+        ).mean()
+        
+        HJv = torch.einsum(
+            'bnm, bmi -> bni', H.to(z).repeat(bs, 1, 1), Jv
+        ).reshape(bs, -1)
+        JTHJv = (torch.autograd.functional.vjp(
+            func, z_augmented, v=HJv, create_graph=True)[1]).reshape(bs, -1)
         TrG2 = torch.sum(JTHJv**2, dim=1).mean()
         return TrG2/TrG**2
     else:
