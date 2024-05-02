@@ -21,6 +21,6 @@ Put these files in the directory *MMLfD-Tutorial/results/*.
 * Geometric Autoencoders – What You See is What You Decode (Nazari., ICML 2023)
 * On Explicit Curvature Regularization of Deep Generative Models (Lee et al., TAG-ML 2023)
 * Geometrically regularized autoencoders for non-Euclidean data (Jang et al., ICLR 2023)
-* Task-Conditioned Variational Autoencoders for Learning Movement Primitives (Noseworthy., CoRL 2019) 
+* Task-Conditioned Variational Autoencoders for Learning Movement Primitives (Noseworthy et al., CoRL 2019) 
 * Equivariant Motion Manifold Primitives (Lee et al., CoRL 2023)
 * MMP++: Motion Manifold Primitives with Parametric Curve Models (Lee et al., Arxiv 2024)
